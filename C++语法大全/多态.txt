@@ -1,0 +1,280 @@
+// 虚基类的作用：在多级混合继承当中，只需要构造初始化一次
+//多态
+//一个名字对应多个不同的行为
+//函数的重载不理解为多态，因为函数的重载需要带不同的参数，所以不理解为多态
+//#include <stdio.h>
+//class CA
+//{
+//
+//public:
+//	void run() const{ printf("CA\n"); }
+//
+//};
+//
+//class CB:public CA
+//{
+//public:
+//	void run() const { printf("CB\n"); }
+//	//void run(CB * const this) const{printf("CB\n");)
+//};
+//
+//void PrintfRun(CA const & m)
+//{
+//	m.run();
+//}
+//
+//void  main()
+//{
+//
+//	CA a;
+//	CB b;
+//	PrintfRun(b);//这里能传b的原因是派生类是基类对象
+//	PrintfRun(a);            
+//
+//}、
+
+
+//#include <stdio.h>
+////
+//class CM
+//{
+//
+//
+//};
+//
+////虚基类的虚有自己的4字节，虚函数的虚有自己的4字节
+//class CA :virtual public CM
+//{
+//
+//public:
+//	//虚函数
+//	virtual void run() const { printf("CA::run\n"); }
+//	virtual void run1() const { printf("CA::run1\n"); }
+//};
+//
+////类型重定义，把函数指针定义成一个函数指针类型
+//typedef void(*pFun)();
+//
+//
+////1.普通函数理解为通过类型去查找，虚函数理解为通过内存去查找
+////2.虚函数会产生虚函数列表，所有的虚函数首地址存放在虚函数列表当中
+////3.虚函数的特性：产生4字节，为最开始的位置。 
+////                基类有虚函数，派生的同名函数不管加不加virtual都是虚函数
+////                基类有虚函数，派生的同名函数，每个类的虚函数列表不一致，但是列表中的表项派生类会继承基类-》如图
+////                派生类出现同名函数，那么，在派生类的虚函数列表中，会用派生类自己的同名函数首地址去覆盖基类的同名函数首地址
+//void main()
+//{
+//
+//	pFun pf = NULL;
+//
+//	printf("%d\n", sizeof(CA));
+//
+//	CA a;
+//	for (int i = 0; i < 2; ++i)
+//	{
+//		pf = (pFun)*((int *)*(int *)&a+i);
+//		pf();
+//
+//	}
+//	
+//
+//}
+
+
+
+
+
+//#include <stdio.h>
+//class CA
+//{
+//
+//public:
+//	virtual void run()  const{ printf("CA::run\n"); }
+//	virtual void run3()  const{ printf("CA::run3\n"); }
+//};
+//
+//
+//class CB:public CA
+//{
+//
+//public:
+//	  void run() const { printf("CB::run\n"); }
+//	virtual void run1() const { printf("CB::run1\n"); }
+//};
+//
+//typedef void(*pFun)();
+//
+//void main()
+//{
+//
+//	CA a;
+//	CB b;
+//	//           这个得到的是虚函数列表里面的内容
+//	//printf("%d\n", *(int*)&a);
+//	//printf("%d\n", *(int*)&b);
+//	//输出结果不一致。验证了上面虚函数特性的第三点
+//
+//
+//	pFun pf = NULL;
+//	for (int i = 0; i < 3; i++)
+//	{
+//		pf = (pFun)*((int *)*(int *)&b+i);
+//		pf();
+//		//输出结果为CB::run  CA::run3  CB::run1，验证了虚函数特性第三后面和第四点
+//		//本来因为继承关系输出的是CA::run CA::run3 CB::run CB::run1，但是当派生类出现同名函数
+//		//派生类会用自己的同名函数首地址覆盖基类同名函数首地址，所以结果为CB::run CA::run3 CB::run1
+//	}
+//
+//}
+
+
+
+
+
+
+
+
+//#include <stdio.h>
+//class CA
+//{
+//
+//public:
+//	virtual void run()  const{ printf("CA::run\n"); }
+//	virtual void run3()  const{ printf("CA::run3\n"); }
+//};
+//
+//
+//class CB :public CA
+//{
+//
+//public:
+//	void run() const { printf("CB::run\n"); }
+//	virtual void run1() const { printf("CB::run1\n"); }
+//};
+//
+////多态：通过基类的指针可以访问派生类的对象
+//void printfRun(CA const& m)
+//{
+//	m.run();
+//}
+//
+//void main()
+//{
+//
+//	CA a;
+//	CB b;
+//	
+//	printfRun(a);
+//	//多态：b调用函数会用派生类b的自身函数run覆盖掉基类的run
+//	printfRun(b);
+//
+//
+//}
+
+
+
+//#include <stdio.h>
+//class CA
+//{
+//	int a;
+//public:
+//	CA(){ a = 1; }
+//	void run()const { printf("CA::run------%d\n", a); }
+//
+//};
+//
+//class CB:public CA
+//{
+//	int b;
+//public:
+//	CB(){ b = 2; }
+// 	void run()const { printf("CB::run------%d\n", b); }
+//
+//};
+//
+//void main()
+//{
+//
+//	CA a, *pa;
+//	CB b, *pb;
+//	pa = &a; pa->run();
+//	pb = &b; pb->run();
+//  
+//	pa = &b; pa->run();
+//	//在基类run，没加virtual之前，是按照类型访问，访问的是pb的run，但是代码很危险
+//	//CA是4字节，b是八字节，但是pb访问的是CA的run，访问的是后4字节，数据为越界
+//	pb = (CB *)&a; pb->run();
+//	//当基类run有virtual之后，访问的就是4字节去找的a的run
+//	
+//}
+
+
+//#include <stdio.h>
+//class CNpc
+//{
+//public:
+//	virtual void PK() = 0;
+//
+//
+//};
+//
+//class CNpc_1 :public CNpc
+//{
+//public:
+//	void PK(){ printf("CNpc_1::PK\n"); }
+//
+//
+//};
+//
+//class CNpc_2 :public CNpc
+//{
+//public:
+//	void PK(){ printf("CNpc_2::PK\n"); }
+//
+//
+//};
+//
+//class CHero
+//{
+//public:
+//	void KillNpc(CNpc * n)
+//	{
+//		n->PK();
+//	}
+//};
+//
+//void main()
+//{
+//	CNpc_1 n1;
+//	CNpc_1 n2;
+//	CNpc *n[4] = { &n1, &n2 };
+//	CHero h;
+//	//通过操作得到某一个npc的位置，并传入n数组，得到具体的npc
+//	h.KillNpc(n[0]);
+//	h.KillNpc(n[1]);//传入不同的参数得到的PK函数不同，这就是多态
+//
+//}
+
+
+
+
+#include <stdio.h>
+//纯在有纯虚函数的类叫抽象基类，不能给出实体对象，一般做基类用，
+//如果派生类没有给出纯虚函数的重写，那么派生类将作为抽象基类继续存在
+//必须要重纯虚函数才能给出实体对象
+class CNpc
+{
+public:
+	virtual void PK() = 0;//纯虚函数，不确定行为的虚函数叫纯虚函数
+
+
+};
+
+//用法：用来做接口
+
+void main()
+{
+
+
+
+}
