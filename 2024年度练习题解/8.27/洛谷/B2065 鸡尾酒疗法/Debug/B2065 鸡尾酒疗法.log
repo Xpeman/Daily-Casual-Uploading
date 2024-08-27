@@ -1,0 +1,6 @@
+﻿  solution.c
+E:\C与C++\VS 2019 codes\2024年度练习题解\8.27\洛谷\B2065 鸡尾酒疗法\solution.c(14,54): warning C4244: “=”: 从“double”转换到“long”，可能丢失数据
+E:\C与C++\VS 2019 codes\2024年度练习题解\8.27\洛谷\B2065 鸡尾酒疗法\solution.c(22,63): warning C4244: “=”: 从“double”转换到“long”，可能丢失数据
+E:\C与C++\VS 2019 codes\2024年度练习题解\8.27\洛谷\B2065 鸡尾酒疗法\solution.c(9,1): warning C4244: “初始化”: 从“double”转换到“long”，可能丢失数据
+E:\C与C++\VS 2019 codes\2024年度练习题解\8.27\洛谷\B2065 鸡尾酒疗法\solution.c(19,1): warning C4244: “初始化”: 从“double”转换到“long”，可能丢失数据
+  B2065 鸡尾酒疗法.vcxproj -> E:\C与C++\VS 2019 codes\2024年度练习题解\8.27\洛谷\B2065 鸡尾酒疗法\Debug\B2065 鸡尾酒疗法.exe
